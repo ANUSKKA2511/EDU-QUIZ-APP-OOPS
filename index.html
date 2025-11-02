@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuiz - Java-Based Quiz Application</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="welcome-content">
+                <div class="logo">
+                    <h1>🎓 EduQuiz</h1>
+                    <p class="subtitle">Java-Based Quiz Application</p>
+                </div>
+                <div class="welcome-info">
+                    <h2>Test Your Java Knowledge</h2>
+                    <p>This quiz contains questions about Java programming language fundamentals, OOP concepts, and more!</p>
+                    <div class="quiz-stats">
+                        <div class="stat">
+                            <span class="number">10</span>
+                            <span class="label">Questions</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number">5</span>
+                            <span class="label">Minutes</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number">100</span>
+                            <span class="label">Points</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="start-btn" class="btn btn-primary">
+                    Start Quiz
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progress" class="progress-fill"></div>
+                    </div>
+                    <span class="progress-text">Progress: <span id="progress-percent">0</span>%</span>
+                </div>
+                <div class="quiz-info">
+                    <span class="timer" id="timer">05:00</span>
+                    <span class="question-counter">
+                        Question <span id="current-question">1</span>/<span id="total-questions">10</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <h2 id="question-text" class="question-text">Loading question...</h2>
+                <div id="options-container" class="options-container">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button id="prev-btn" class="btn btn-secondary" disabled>
+                    ← Previous
+                </button>
+                <button id="next-btn" class="btn btn-primary">
+                    Next Question →
+                </button>
+                <button id="submit-btn" class="btn btn-success" style="display: none;">
+                    Submit Quiz
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <div class="results-content">
+                <div class="results-header">
+                    <h2>📊 Quiz Completed!</h2>
+                    <p>Here's your performance</p>
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <svg width="120" height="120" class="progress-ring">
+                            <circle stroke="#e6e6e6" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            <circle id="score-ring" stroke="#4CAF50" stroke-width="8" fill="transparent" r="52" cx="60" cy="60" 
+                                    stroke-dasharray="326.56" stroke-dashoffset="326.56" transform="rotate(-90 60 60)"/>
+                        </svg>
+                        <div class="score-text">
+                            <span id="score-percentage">0%</span>
+                        </div>
+                    </div>
+                    <div class="score-details">
+                        <p>You scored <span id="correct-answers">0</span> out of <span id="total-questions-result">10</span> correctly</p>
+                        <p class="score-message" id="score-message">Keep practicing!</p>
+                    </div>
+                </div>
+
+                <div class="answers-review">
+                    <h3>Review Answers</h3>
+                    <div id="answers-list" class="answers-list">
+                        <!-- Answers will be populated here -->
+                    </div>
+                </div>
+
+                <div class="results-actions">
+                    <button id="restart-btn" class="btn btn-primary">
+                        Take Quiz Again
+                    </button>
+                    <button id="home-btn" class="btn btn-secondary">
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="quiz-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
