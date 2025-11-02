@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduQuiz - Java-Based Quiz Application</title>
+    <title>EduQuiz - Multi-Subject Quiz Platform</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -14,35 +14,71 @@
             <div class="welcome-content">
                 <div class="logo">
                     <h1>🎓 EduQuiz</h1>
-                    <p class="subtitle">Java-Based Quiz Application</p>
+                    <p class="subtitle">Multi-Subject Quiz Platform</p>
                 </div>
                 <div class="welcome-info">
-                    <h2>Test Your Java Knowledge</h2>
-                    <p>This quiz contains questions about Java programming language fundamentals, OOP concepts, and more!</p>
-                    <div class="quiz-stats">
-                        <div class="stat">
-                            <span class="number">10</span>
-                            <span class="label">Questions</span>
+                    <h2>Choose Your Subject</h2>
+                    <p>Test your knowledge across multiple subjects. Select a subject to begin your quiz!</p>
+                    
+                    <div class="subject-selection">
+                        <div class="subject-card" data-subject="java">
+                            <div class="subject-icon">☕</div>
+                            <h3>Java Programming</h3>
+                            <p>Object-oriented programming, data structures, and core Java concepts</p>
+                            <div class="subject-stats">
+                                <span>10 Questions</span>
+                                <span>•</span>
+                                <span>5 Minutes</span>
+                            </div>
                         </div>
-                        <div class="stat">
-                            <span class="number">5</span>
-                            <span class="label">Minutes</span>
+                        
+                        <div class="subject-card" data-subject="python">
+                            <div class="subject-icon">🐍</div>
+                            <h3>Python Programming</h3>
+                            <p>Python syntax, data structures, and programming fundamentals</p>
+                            <div class="subject-stats">
+                                <span>10 Questions</span>
+                                <span>•</span>
+                                <span>5 Minutes</span>
+                            </div>
                         </div>
-                        <div class="stat">
-                            <span class="number">100</span>
-                            <span class="label">Points</span>
+                        
+                        <div class="subject-card" data-subject="web">
+                            <div class="subject-icon">🌐</div>
+                            <h3>Web Development</h3>
+                            <p>HTML, CSS, JavaScript, and modern web technologies</p>
+                            <div class="subject-stats">
+                                <span>10 Questions</span>
+                                <span>•</span>
+                                <span>5 Minutes</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button id="start-btn" class="btn btn-primary">
-                    Start Quiz
-                </button>
+                
+                <div class="quiz-stats">
+                    <div class="stat">
+                        <span class="number">3</span>
+                        <span class="label">Subjects</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">30</span>
+                        <span class="label">Total Questions</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">15</span>
+                        <span class="label">Minutes Total</span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Quiz Screen -->
         <div id="quiz-screen" class="screen">
             <div class="quiz-header">
+                <div class="subject-badge" id="subject-badge">
+                    <span id="current-subject">Java</span>
+                </div>
                 <div class="progress-container">
                     <div class="progress-bar">
                         <div id="progress" class="progress-fill"></div>
@@ -81,8 +117,11 @@
         <div id="results-screen" class="screen">
             <div class="results-content">
                 <div class="results-header">
+                    <div class="subject-badge results-subject">
+                        <span id="results-subject">Java</span>
+                    </div>
                     <h2>📊 Quiz Completed!</h2>
-                    <p>Here's your performance</p>
+                    <p>Here's your performance in <span id="results-subject-name">Java</span></p>
                 </div>
                 
                 <div class="score-display">
@@ -113,7 +152,10 @@
                     <button id="restart-btn" class="btn btn-primary">
                         Take Quiz Again
                     </button>
-                    <button id="home-btn" class="btn btn-secondary">
+                    <button id="new-subject-btn" class="btn btn-secondary">
+                        Try Another Subject
+                    </button>
+                    <button id="home-btn" class="btn btn-outline">
                         Back to Home
                     </button>
                 </div>
