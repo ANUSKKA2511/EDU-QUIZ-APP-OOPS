@@ -30,7 +30,16 @@ class EduQuiz {
             const button = card.querySelector('.card-button');
             const subject = card.dataset.subject;
             
-            button.addEventListener('click', () => {
+            // Add click event to the entire card AND the button
+            card.addEventListener('click', (e) => {
+                // Don't trigger if clicking on the button itself (to avoid double trigger)
+                if (!e.target.closest('.card-button')) {
+                    this.selectSubject(subject);
+                }
+            });
+            
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent double trigger
                 this.selectSubject(subject);
             });
             
@@ -50,17 +59,21 @@ class EduQuiz {
     }
 
     selectSubject(subject) {
+        console.log('Subject selected:', subject); // Debug log
+        
         this.currentSubject = subject;
         
         // Visual feedback - highlight selected card
         document.querySelectorAll('.subject-card').forEach(card => {
             card.classList.remove('active');
             card.style.transform = 'translateY(0)';
+            card.style.borderColor = '#e0e0e0';
         });
         
         const selectedCard = document.querySelector(`[data-subject="${subject}"]`);
         selectedCard.classList.add('active');
         selectedCard.style.transform = 'translateY(-10px)';
+        selectedCard.style.borderColor = '#667eea';
         
         // Add loading animation to button
         const button = selectedCard.querySelector('.card-button');
@@ -70,10 +83,8 @@ class EduQuiz {
         
         // Start quiz after a brief delay for visual feedback
         setTimeout(() => {
-            button.innerHTML = originalText;
-            button.disabled = false;
             this.startQuiz();
-        }, 1000);
+        }, 800);
     }
 
     showSubjectSelection() {
@@ -82,16 +93,23 @@ class EduQuiz {
         document.querySelectorAll('.subject-card').forEach(card => {
             card.classList.remove('active');
             card.style.transform = 'translateY(0)';
+            card.style.borderColor = '#e0e0e0';
         });
         this.currentSubject = null;
     }
 
     startQuiz() {
-        if (!this.currentSubject) return;
+        if (!this.currentSubject) {
+            console.error('No subject selected!');
+            return;
+        }
+        
+        console.log('Starting quiz for subject:', this.currentSubject); // Debug log
         
         this.currentQuestion = 0;
         this.score = 0;
-        this.userAnswers = new Array(this.getCurrentQuestions().length).fill(null);
+        const questions = this.getCurrentQuestions();
+        this.userAnswers = new Array(questions.length).fill(null);
         this.timeLeft = 300;
         
         this.showScreen('quiz-screen');
@@ -116,6 +134,9 @@ class EduQuiz {
 
     startTimer() {
         this.updateTimerDisplay();
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
         this.timer = setInterval(() => {
             this.timeLeft--;
             this.updateTimerDisplay();
@@ -130,17 +151,18 @@ class EduQuiz {
         const minutes = Math.floor(this.timeLeft / 60);
         const seconds = this.timeLeft % 60;
         const timerElement = document.getElementById('timer');
-        timerElement.textContent = 
-            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        
-        // Change color when time is running out
-        if (this.timeLeft <= 60) {
-            timerElement.style.background = 'linear-gradient(135deg, #ff4757, #ff6b81)';
-            timerElement.style.animation = 'pulse 1s infinite';
-        } else if (this.timeLeft <= 120) {
-            timerElement.style.background = 'linear-gradient(135deg, #ffa502, #ffb142)';
-        } else {
-            timerElement.style.background = 'linear-gradient(135deg, #2ed573, #7bed9f)';
+        if (timerElement) {
+            timerElement.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when time is running out
+            if (this.timeLeft <= 60) {
+                timerElement.style.background = 'linear-gradient(135deg, #ff4757, #ff6b81)';
+            } else if (this.timeLeft <= 120) {
+                timerElement.style.background = 'linear-gradient(135deg, #ffa502, #ffb142)';
+            } else {
+                timerElement.style.background = 'linear-gradient(135deg, #2ed573, #7bed9f)';
+            }
         }
     }
 
@@ -193,20 +215,20 @@ class EduQuiz {
         const nextBtn = document.getElementById('next-btn');
         const submitBtn = document.getElementById('submit-btn');
         
-        prevBtn.disabled = this.currentQuestion === 0;
+        if (prevBtn) prevBtn.disabled = this.currentQuestion === 0;
         
         if (this.currentQuestion === questions.length - 1) {
-            nextBtn.style.display = 'none';
-            submitBtn.style.display = 'flex';
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (submitBtn) submitBtn.style.display = 'flex';
         } else {
-            nextBtn.style.display = 'flex';
-            submitBtn.style.display = 'none';
+            if (nextBtn) nextBtn.style.display = 'flex';
+            if (submitBtn) submitBtn.style.display = 'none';
         }
         
         // Enable next button only if an option is selected
         const isOptionSelected = this.userAnswers[this.currentQuestion] !== null;
-        nextBtn.disabled = !isOptionSelected;
-        submitBtn.disabled = !isOptionSelected;
+        if (nextBtn) nextBtn.disabled = !isOptionSelected;
+        if (submitBtn) submitBtn.disabled = !isOptionSelected;
     }
 
     nextQuestion() {
@@ -214,9 +236,6 @@ class EduQuiz {
         if (this.currentQuestion < questions.length - 1) {
             this.currentQuestion++;
             this.loadQuestion();
-            
-            // Add slide animation
-            this.animateQuestionTransition('next');
         }
     }
 
@@ -224,22 +243,7 @@ class EduQuiz {
         if (this.currentQuestion > 0) {
             this.currentQuestion--;
             this.loadQuestion();
-            
-            // Add slide animation
-            this.animateQuestionTransition('previous');
         }
-    }
-
-    animateQuestionTransition(direction) {
-        const questionContainer = document.querySelector('.question-container');
-        questionContainer.style.opacity = '0';
-        questionContainer.style.transform = direction === 'next' ? 'translateX(50px)' : 'translateX(-50px)';
-        
-        setTimeout(() => {
-            questionContainer.style.opacity = '1';
-            questionContainer.style.transform = 'translateX(0)';
-            questionContainer.style.transition = 'all 0.3s ease';
-        }, 50);
     }
 
     updateProgress() {
@@ -248,12 +252,14 @@ class EduQuiz {
         const progressElement = document.getElementById('progress');
         const progressPercent = document.getElementById('progress-percent');
         
-        progressElement.style.width = `${progress}%`;
-        progressPercent.textContent = Math.round(progress);
+        if (progressElement) progressElement.style.width = `${progress}%`;
+        if (progressPercent) progressPercent.textContent = Math.round(progress);
     }
 
     submitQuiz() {
-        clearInterval(this.timer);
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
         this.calculateScore();
         this.showResults();
     }
@@ -297,15 +303,12 @@ class EduQuiz {
         this.animateScoreRing(percentage);
         this.displayAnswersReview();
         this.showScreen('results-screen');
-        
-        // Add confetti for excellent scores
-        if (percentage >= 80) {
-            this.createConfetti();
-        }
     }
 
     animateScoreRing(percentage) {
         const circle = document.getElementById('score-ring');
+        if (!circle) return;
+        
         const radius = 52;
         const circumference = 2 * Math.PI * radius;
         const offset = circumference - (percentage / 100) * circumference;
@@ -322,6 +325,8 @@ class EduQuiz {
     displayAnswersReview() {
         const questions = this.getCurrentQuestions();
         const answersList = document.getElementById('answers-list');
+        if (!answersList) return;
+        
         answersList.innerHTML = '';
         
         questions.forEach((question, index) => {
@@ -361,52 +366,12 @@ class EduQuiz {
         });
     }
 
-    createConfetti() {
-        const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
-        const confettiCount = 100;
-        
-        for (let i = 0; i < confettiCount; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.animationDelay = Math.random() * 3 + 's';
-            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.width = Math.random() * 10 + 5 + 'px';
-            confetti.style.height = Math.random() * 10 + 5 + 'px';
-            document.body.appendChild(confetti);
-            
-            // Remove confetti after animation
-            setTimeout(() => {
-                confetti.remove();
-            }, 4000);
-        }
-    }
-
     restartQuiz() {
-        // Add loading state
-        const restartBtn = document.getElementById('restart-btn');
-        const originalText = restartBtn.innerHTML;
-        restartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restarting...';
-        restartBtn.disabled = true;
-        
-        setTimeout(() => {
-            restartBtn.innerHTML = originalText;
-            restartBtn.disabled = false;
-            this.startQuiz();
-        }, 800);
+        this.startQuiz();
     }
 
     goHome() {
-        // Add transition effect
-        const resultsScreen = document.getElementById('results-screen');
-        resultsScreen.style.opacity = '0';
-        resultsScreen.style.transform = 'scale(0.9)';
-        
-        setTimeout(() => {
-            this.showSubjectSelection();
-            resultsScreen.style.opacity = '1';
-            resultsScreen.style.transform = 'scale(1)';
-        }, 300);
+        this.showSubjectSelection();
     }
 
     showScreen(screenId) {
@@ -415,89 +380,31 @@ class EduQuiz {
         });
         
         const targetScreen = document.getElementById(screenId);
-        targetScreen.classList.add('active');
-        
-        // Add fade-in effect
-        targetScreen.style.opacity = '0';
-        targetScreen.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            targetScreen.style.opacity = '1';
-            targetScreen.style.transform = 'translateY(0)';
-            targetScreen.style.transition = 'all 0.5s ease';
-        }, 50);
+        if (targetScreen) {
+            targetScreen.classList.add('active');
+        }
     }
 
     checkWebsiteVersion() {
-        const version = '2.1';
-        const features = [
-            '🎯 Multi-Subject Quizzes',
-            '🎨 Modern Design',
-            '📱 Fully Responsive',
-            '⚡ Interactive Animations',
-            '🏆 Achievement System'
-        ];
-        
-        console.log(`%c🎓 EduQuiz v${version}`, 'color: #667eea; font-size: 16px; font-weight: bold;');
-        console.log(`%c✨ Features: ${features.join(' • ')}`, 'color: #764ba2; font-size: 12px;');
-        console.log(`%c🕒 Loaded: ${new Date().toLocaleString()}`, 'color: #666; font-size: 11px;');
-        
-        // Add version badge to page (hidden by default)
-        const versionBadge = document.createElement('div');
-        versionBadge.style.cssText = `
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(102, 126, 234, 0.9);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 600;
-            z-index: 1000;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        `;
-        versionBadge.textContent = `v${version}`;
-        versionBadge.title = `EduQuiz ${version}\n${features.join('\n')}`;
-        
-        versionBadge.addEventListener('mouseenter', () => {
-            versionBadge.style.opacity = '1';
-        });
-        
-        versionBadge.addEventListener('mouseleave', () => {
-            versionBadge.style.opacity = '0.7';
-        });
-        
-        document.body.appendChild(versionBadge);
+        const version = '2.2';
+        console.log(`%c🎓 EduQuiz v${version} - Fixed Click Issues`, 'color: #667eea; font-size: 16px; font-weight: bold;');
     }
 }
 
-// Add confetti animation styles
+// Add CSS for the new elements
 const style = document.createElement('style');
 style.textContent = `
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
+    .subject-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
     }
     
-    @keyframes confettiFall {
-        0% {
-            transform: translateY(-100px) rotate(0deg);
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
-        }
+    .subject-card.active {
+        border: 2px solid #667eea !important;
     }
     
-    .confetti {
-        position: fixed;
-        top: -10px;
-        border-radius: 2px;
-        animation: confettiFall 3s linear forwards;
-        z-index: 9999;
+    .card-button {
+        cursor: pointer;
     }
     
     .option {
@@ -511,6 +418,19 @@ style.textContent = `
         transition: all 0.3s ease;
         background: white;
         font-weight: 500;
+    }
+    
+    .option:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+        transform: translateX(5px);
+    }
+    
+    .option.selected {
+        border-color: #667eea;
+        background: #667eea;
+        color: white;
+        transform: translateX(10px);
     }
     
     .option-number {
@@ -531,8 +451,13 @@ style.textContent = `
         color: #667eea;
     }
     
-    .option-text {
-        flex: 1;
+    .fa-spinner {
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
     
     .answer-item {
@@ -541,11 +466,6 @@ style.textContent = `
         background: #f8f9fa;
         border-left: 4px solid #e0e0e0;
         margin-bottom: 20px;
-        transition: all 0.3s ease;
-    }
-    
-    .answer-item:hover {
-        transform: translateX(5px);
     }
     
     .answer-item.correct {
@@ -595,45 +515,6 @@ style.textContent = `
         background: #f44336;
         color: white;
     }
-    
-    .answer-question {
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 15px;
-        line-height: 1.5;
-    }
-    
-    .answer-details {
-        margin-bottom: 15px;
-    }
-    
-    .answer-user, .answer-correct {
-        margin-bottom: 8px;
-        line-height: 1.4;
-    }
-    
-    .answer-explanation {
-        background: rgba(255, 255, 255, 0.7);
-        padding: 15px;
-        border-radius: 10px;
-        font-style: italic;
-        color: #666;
-        border-left: 3px solid #667eea;
-    }
-    
-    .answer-explanation i {
-        color: #667eea;
-        margin-right: 8px;
-    }
-    
-    .fa-spinner {
-        animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
 `;
 
 document.head.appendChild(style);
@@ -643,12 +524,5 @@ document.addEventListener('DOMContentLoaded', () => {
     new EduQuiz();
 });
 
-// Add loading animation
-window.addEventListener('load', () => {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.5s ease';
-    
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 100);
-});
+// Add debug helper
+console.log('🚀 EduQuiz initialized - Click any subject card to start!');
