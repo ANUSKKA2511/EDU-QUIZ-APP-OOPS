@@ -5,223 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduQuiz - Interactive Learning Platform</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="background-animation">
-        <div class="floating-shape shape-1"></div>
-        <div class="floating-shape shape-2"></div>
-        <div class="floating-shape shape-3"></div>
-        <div class="floating-shape shape-4"></div>
-    </div>
-
     <div class="container">
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="screen active">
             <div class="welcome-content">
-                <!-- Header -->
-                <header class="main-header">
-                    <div class="logo-container">
-                        <div class="logo-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="logo-text">
-                            <h1>EduQuiz</h1>
-                            <span>Learn. Test. Excel.</span>
-                        </div>
-                    </div>
-                </header>
+                <div class="header">
+                    <h1>🎓 EduQuiz</h1>
+                    <p>Test Your Programming Knowledge</p>
+                </div>
 
-                <!-- Hero Section -->
-                <div class="hero-section">
-                    <div class="hero-content">
-                        <h2 class="hero-title">
-                            <span class="gradient-text">Challenge Your Knowledge</span>
-                        </h2>
-                        <p class="hero-subtitle">
-                            Test your programming skills with interactive quizzes. 
-                            Choose your subject and start learning today!
-                        </p>
-                        
-                        <!-- Stats -->
-                        <div class="hero-stats">
-                            <div class="stat-item">
-                                <div class="stat-number">3</div>
-                                <div class="stat-label">Subjects</div>
+                <div class="subject-selection">
+                    <h2>Choose Your Subject</h2>
+                    <div class="subjects-grid">
+                        <div class="subject-card" onclick="startQuiz('java')">
+                            <div class="subject-icon">
+                                <i class="fab fa-java"></i>
                             </div>
-                            <div class="stat-item">
-                                <div class="stat-number">30</div>
-                                <div class="stat-label">Questions</div>
+                            <h3>Java Programming</h3>
+                            <p>10 Questions • 5 Minutes</p>
+                            <button class="start-btn">Start Quiz</button>
+                        </div>
+
+                        <div class="subject-card" onclick="startQuiz('python')">
+                            <div class="subject-icon">
+                                <i class="fab fa-python"></i>
                             </div>
-                            <div class="stat-item">
-                                <div class="stat-number">100%</div>
-                                <div class="stat-label">Free</div>
+                            <h3>Python Programming</h3>
+                            <p>10 Questions • 5 Minutes</p>
+                            <button class="start-btn">Start Quiz</button>
+                        </div>
+
+                        <div class="subject-card" onclick="startQuiz('web')">
+                            <div class="subject-icon">
+                                <i class="fas fa-code"></i>
                             </div>
+                            <h3>Web Development</h3>
+                            <p>10 Questions • 5 Minutes</p>
+                            <button class="start-btn">Start Quiz</button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Subject Selection -->
-                <div class="subject-section">
-                    <h3 class="section-title">Choose Your Subject</h3>
-                    <div class="subject-grid">
-                        <!-- Java Card -->
-                        <div class="subject-card" data-subject="java">
-                            <div class="card-header">
-                                <div class="subject-icon java">
-                                    <i class="fab fa-java"></i>
-                                </div>
-                                <div class="difficulty-badge intermediate">Intermediate</div>
-                            </div>
-                            <h4 class="subject-name">Java Programming</h4>
-                            <p class="subject-description">
-                                Master object-oriented programming, data structures, and core Java concepts
-                            </p>
-                            <div class="card-features">
-                                <span class="feature">
-                                    <i class="fas fa-code"></i>
-                                    OOP Concepts
-                                </span>
-                                <span class="feature">
-                                    <i class="fas fa-cogs"></i>
-                                    Collections
-                                </span>
-                                <span class="feature">
-                                    <i class="fas fa-bolt"></i>
-                                    Multithreading
-                                </span>
-                            </div>
-                            <div class="card-stats">
-                                <div class="stat">
-                                    <i class="far fa-clock"></i>
-                                    5 min
-                                </div>
-                                <div class="stat">
-                                    <i class="far fa-question-circle"></i>
-                                    10 Qs
-                                </div>
-                                <div class="stat">
-                                    <i class="far fa-star"></i>
-                                    100 pts
-                                </div>
-                            </div>
-                            <button class="card-button">
-                                Start Java Quiz
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-
-                        <!-- Python Card -->
-                        <div class="subject-card" data-subject="python">
-                            <div class="card-header">
-                                <div class="subject-icon python">
-                                    <i class="fab fa-python"></i>
-                                </div>
-                                <div class="difficulty-badge beginner">Beginner</div>
-                            </div>
-                            <h4 class="subject-name">Python Programming</h4>
-                            <p class="subject-description">
-                                Learn Python syntax, data structures, and programming fundamentals
-                            </p>
-                            <div class="card-features">
-                                <span class="feature">
-                                    <i class="fas fa-snake"></i>
-                                    Syntax Basics
-                                </span>
-                                <span class="feature">
-                                    <i class="fas fa-layer-group"></i>
-                                    Data Structures
-                                </span>
-                                <span class="feature">
-                                    <i class="fas fa-function"></i>
-                                    Functions
-                                </span>
-                            </div>
-                            <div class="card-stats">
-                                <div class="stat">
-                                    <i class="far fa-clock"></i>
-                                    5 min
-                                </div>
-                                <div class="stat">
-                                    <i class="far fa-question-circle"></i>
-                                    10 Qs
-                                </div>
-                                <div class="stat">
-                                    <i class="far fa-star"></i>
-                                    100 pts
-                                </div>
-                            </div>
-                            <button class="card-button">
-                                Start Python Quiz
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-
-                        <!-- Web Development Card -->
-                        <div class="subject-card" data-subject="web">
-                            <div class="card-header">
-                                <div class="subject-icon web">
-                                    <i class="fas fa-code"></i>
-                                </div>
-                                <div class="difficulty-badge mixed">Mixed</div>
-                            </div>
-                            <h4 class="subject-name">Web Development</h4>
-                            <p class="subject-description">
-                                Explore HTML, CSS, JavaScript, and modern web technologies
-                            </p>
-                            <div class="card-features">
-                                <span class="feature">
-                                    <i class="fab fa-html5"></i>
-                                    HTML5
-                                </span>
-                                <span class="feature">
-                                    <i class="fab fa-css3-alt"></i>
-                                    CSS3
-                                </span>
-                                <span class="feature">
-                                    <i class="fab fa-js"></i>
-                                    JavaScript
-                                </span>
-                            </div>
-                            <div class="card-stats">
-                                <div class="stat">
-                                    <i class="far fa-clock"></i>
-                                    5 min
-                                </div>
-                                <div class="stat">
-                                    <i class="far fa-question-circle"></i>
-                                    10 Qs
-                                </div>
-                                <div class="stat">
-                                    <i class="far fa-star"></i>
-                                    100 pts
-                                </div>
-                            </div>
-                            <button class="card-button">
-                                Start Web Quiz
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <footer class="welcome-footer">
-                    <p>Made with <i class="fas fa-heart" style="color: #ff4757;"></i> for learners worldwide</p>
-                </footer>
             </div>
         </div>
 
         <!-- Quiz Screen -->
         <div id="quiz-screen" class="screen">
-            <!-- Quiz content remains the same but will be styled better -->
+            <div class="quiz-header">
+                <div class="subject-info">
+                    <span id="current-subject">Java</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progress" class="progress-fill"></div>
+                    </div>
+                    <span>Question <span id="current-question">1</span>/<span id="total-questions">10</span></span>
+                </div>
+                <div class="timer" id="timer">05:00</div>
+            </div>
+
+            <div class="question-container">
+                <h2 id="question-text">Question will appear here</h2>
+                <div id="options-container" class="options-container">
+                    <!-- Options will be added by JavaScript -->
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button id="prev-btn" onclick="previousQuestion()" disabled>Previous</button>
+                <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+                <button id="submit-btn" onclick="submitQuiz()" style="display: none;">Submit Quiz</button>
+            </div>
         </div>
 
         <!-- Results Screen -->
         <div id="results-screen" class="screen">
-            <!-- Results content remains the same but will be styled better -->
+            <div class="results-content">
+                <h2>🎉 Quiz Completed!</h2>
+                <div class="score-display">
+                    <div class="score-circle">
+                        <span id="score-percentage">0%</span>
+                    </div>
+                    <p>You scored <span id="correct-answers">0</span> out of <span id="total-questions-result">10</span> correctly</p>
+                </div>
+                <div class="results-actions">
+                    <button onclick="restartQuiz()">Try Again</button>
+                    <button onclick="goHome()">Choose Another Subject</button>
+                </div>
+            </div>
         </div>
     </div>
 
